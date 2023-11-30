@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace Swiggy.Utilities
 {
-    internal class SearchUtils
+    internal class ExcelUtils
     {
-        public static List<SearchData> ReadSearchData(string excelFilePath,string sheetName)
+        public static List<T> ReadSearchData<T>(string excelFilePath,string sheetName,Func<DataRow,T> excelObjFunction) where T : new()
         {
-            List<SearchData> excelSearchList = new List<SearchData>();
+            List<T> excelSearchList = new List<T>();
             Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
             using (var stream = new FileStream(excelFilePath,FileMode.Open,FileAccess.Read,FileShare.ReadWrite))
             {
@@ -33,7 +33,8 @@ namespace Swiggy.Utilities
                         
                         foreach (DataRow row in dataTable.Rows)
                         {
-                            SearchData data = new SearchData() { RestaurantName= GetValueOrDefault(row, "Restaurant Name"),FoodItemName=GetValueOrDefault(row,"Food Item Name") };
+                            var data = excelObjFunction(row);
+                            //SearchData data = new SearchData() { RestaurantName= GetValueOrDefault(row, "Restaurant Name"),FoodItemName=GetValueOrDefault(row,"Food Item Name") };
 
                             excelSearchList.Add(data);
                         }
@@ -49,7 +50,7 @@ namespace Swiggy.Utilities
             return excelSearchList;
 
         }
-        static string GetValueOrDefault(DataRow row, string columnName)
+        public static string GetValueOrDefault(DataRow row, string columnName)
         {
             Console.WriteLine(row + "  " + columnName);
             return row.Table.Columns.Contains(columnName) ? row[columnName]?.ToString() : null;

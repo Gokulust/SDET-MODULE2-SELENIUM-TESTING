@@ -3,9 +3,11 @@ using Swiggy.PageObjects;
 using Swiggy.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace Swiggy.TestScripts
 {
@@ -18,11 +20,14 @@ namespace Swiggy.TestScripts
             string? currDir = Directory.GetParent(@"../../../")?.FullName;
             string? excelFilePath = currDir + "/TestData/SwiggyData.xlsx";
             string? sheetName = "SearchData";
-            List<SearchData> excelSaerchData = SearchUtils.ReadSearchData(excelFilePath, sheetName);
-            
-            foreach(var excel in excelSaerchData)
+            Func<DataRow,SearchData> myfunction = (row) => {return new SearchData() { RestaurantName = ExcelUtils.GetValueOrDefault(row, "Restaurant Name"), FoodItemName = ExcelUtils.GetValueOrDefault(row, "Food Item Name") }; };
+            List<SearchData> excelSaerchData = ExcelUtils.ReadSearchData(excelFilePath, sheetName,myfunction) ;
+            SwiggyHomePage swiggyHomePage = new(driver);
+            swiggyHomePage.ChangeLocation("Thiruvananthapuram");
+
+            foreach (var excel in excelSaerchData)
             {
-                SwiggyHomePage swiggyHomePage = new(driver);
+               
                 var searchPage = swiggyHomePage.CLickOnSearchIcon();
                 try
                 {

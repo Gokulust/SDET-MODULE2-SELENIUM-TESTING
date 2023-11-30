@@ -32,6 +32,18 @@
           "lib/net6.0/SeleniumExtras.PageObjects.dll": {}
         }
       },
+      "DotNetSeleniumExtras.WaitHelpers/3.11.0": {
+        "type": "package",
+        "dependencies": {
+          "Selenium.WebDriver": "3.10.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/SeleniumExtras.WaitHelpers.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/SeleniumExtras.WaitHelpers.dll": {}
+        }
+      },
       "ExcelDataReader/3.6.0": {
         "type": "package",
         "compile": {
@@ -954,6 +966,21 @@
         "lib/net462/SeleniumExtras.PageObjects.dll",
         "lib/net6.0/SeleniumExtras.PageObjects.dll",
         "lib/netstandard2.0/SeleniumExtras.PageObjects.dll"
+      ]
+    },
+    "DotNetSeleniumExtras.WaitHelpers/3.11.0": {
+      "sha512": "xc6jVVl5ymgk3ZNWnC/KHxkEup1QpnwYbrwF+NQoCOGERsD8YMlLwmsX4lGhLXCLo/YQTRTIwlKCN9E/doGUNg==",
+      "type": "package",
+      "path": "dotnetseleniumextras.waithelpers/3.11.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "dotnetseleniumextras.waithelpers.3.11.0.nupkg.sha512",
+        "dotnetseleniumextras.waithelpers.nuspec",
+        "lib/net35/SeleniumExtras.WaitHelpers.dll",
+        "lib/net40/SeleniumExtras.WaitHelpers.dll",
+        "lib/net45/SeleniumExtras.WaitHelpers.dll",
+        "lib/netstandard2.0/SeleniumExtras.WaitHelpers.dll"
       ]
     },
     "ExcelDataReader/3.6.0": {
@@ -2344,6 +2371,7 @@
     "net7.0": [
       "DotNetSeleniumExtras.PageObjects >= 3.11.0",
       "DotNetSeleniumExtras.PageObjects.Core >= 4.14.1",
+      "DotNetSeleniumExtras.WaitHelpers >= 3.11.0",
       "ExcelDataReader >= 3.6.0",
       "ExcelDataReader.DataSet >= 3.6.0",
       "ExtentReports >= 5.0.1",
@@ -2362,11 +2390,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\249214\\Desktop\\Selenium_Swiggy_Mini_Project\\Swiggy_Selenium_Project\\Swiggy\\Swiggy.csproj",
+      "projectUniqueName": "C:\\Users\\249214\\Desktop\\Testing_Mini_Project\\Swiggy_Selenium_Project\\Swiggy\\Swiggy.csproj",
       "projectName": "Swiggy",
-      "projectPath": "C:\\Users\\249214\\Desktop\\Selenium_Swiggy_Mini_Project\\Swiggy_Selenium_Project\\Swiggy\\Swiggy.csproj",
+      "projectPath": "C:\\Users\\249214\\Desktop\\Testing_Mini_Project\\Swiggy_Selenium_Project\\Swiggy\\Swiggy.csproj",
       "packagesPath": "C:\\Users\\249214\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\249214\\Desktop\\Selenium_Swiggy_Mini_Project\\Swiggy_Selenium_Project\\Swiggy\\obj\\",
+      "outputPath": "C:\\Users\\249214\\Desktop\\Testing_Mini_Project\\Swiggy_Selenium_Project\\Swiggy\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\249214\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -2402,6 +2430,10 @@
           "DotNetSeleniumExtras.PageObjects.Core": {
             "target": "Package",
             "version": "[4.14.1, )"
+          },
+          "DotNetSeleniumExtras.WaitHelpers": {
+            "target": "Package",
+            "version": "[3.11.0, )"
           },
           "ExcelDataReader": {
             "target": "Package",

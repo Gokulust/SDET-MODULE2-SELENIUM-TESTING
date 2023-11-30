@@ -73,10 +73,8 @@ namespace Swiggy.Utilities
             fluentWait.IgnoreExceptionTypes(typeof(NoSuchElementException));
             fluentWait.Message = "Element Not Found";
             fluentWait.Until(d => d.FindElements(By.XPath("//a[@title='Swiggy']")));
-            fluentWait.Until(d => d.FindElement(By.XPath("//div[@class='_2z2N5']"))).Click();
-            fluentWait.Until(d => d.FindElement(By.XPath("//input[@class='_381fS _1oTLG _1H_62']"))).SendKeys("Thiruvananthapuram");
-            Thread.Sleep(3000);
-            fluentWait.Until(d => d.FindElement(By.XPath("//div[@class='_2peD4']"))).Click();
+            
+
             Thread.Sleep(3000);
           
         }
