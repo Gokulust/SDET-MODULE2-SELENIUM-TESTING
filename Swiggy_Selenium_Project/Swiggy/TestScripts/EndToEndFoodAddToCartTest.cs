@@ -1,4 +1,6 @@
-﻿using OpenQA.Selenium;
+﻿using AventStack.ExtentReports;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 using Swiggy.PageObjects;
 using Swiggy.Utilities;
 using System;
@@ -29,73 +31,41 @@ namespace Swiggy.TestScripts
             {
                
                 var searchPage = swiggyHomePage.CLickOnSearchIcon();
-                try
-                {
-
-                    Assert.That(driver.Url.Contains("search"));
-                    Test = ExtentObject.CreateTest("Search Page Loading");
-                    Test.Pass("Search Page Loaded successfully");
-                }
-                catch (AssertionException ex)
-                {
-                    Test = ExtentObject.CreateTest("Search Page Loding");
-                    Test.Fail("Search Page Loaded failed");
-                }
+                WaitAndLogAssertion(() => driver.Url.Contains("search"), "Search Page Loading", "Search Page Loaded successfully", "Search Page Loaded failed");
                 var searchResultPage = searchPage.EnterSearchInput(excel.RestaurantName);
-                try
-                {
-
-                    Assert.That(driver.FindElement(By.XPath("//div[@data-testid='resturant-card-name'][1]")).Text.Contains(excel.RestaurantName));
-                    Test = ExtentObject.CreateTest("Search Result Page Loading");
-                    Test.Pass("Search Result Page Loaded successfully");
-                }
-                catch (AssertionException ex)
-                {
-                    Test = ExtentObject.CreateTest("Search Result Page Loading");
-                    Test.Fail("Search Result Page Loaded failed");
-                }
+                WaitAndLogAssertion(() => driver.FindElement(By.XPath("//div[@data-testid='resturant-card-name'][1]")).Text.Contains(excel.RestaurantName), "Search Result Page Loading", "Search Result Page Loaded successfully", "Search Result Page Loaded failed");
                 var restaurantPage = searchResultPage.ClickOnSelectedSearchElemnt();
-                try
-                {
-
-                    Assert.That(driver.FindElement(By.XPath("//p[@class='RestaurantNameAddress_name__2IaTv']")).Text.Contains(excel.RestaurantName));
-                    Test = ExtentObject.CreateTest("Resutaurant Page Loading");
-                    Test.Pass("Resutaurant Page Loaded successfully");
-                }
-                catch (AssertionException ex)
-                {
-                    Test = ExtentObject.CreateTest("Resutaurant Page Loading");
-                    Test.Fail("Resutaurant Page failed");
-                }
+                WaitAndLogAssertion(() => driver.FindElement(By.XPath("//p[@class='RestaurantNameAddress_name__2IaTv']")).Text.Contains(excel.RestaurantName), "Resutaurant Page Loading", "Resutaurant Page Loaded successfully", "Resutaurant Page failed");
                 restaurantPage.ClickOnFoodSearchElement();
-                Thread.Sleep(1000);
                 restaurantPage.TypeFoodInFoodSearchBox(excel.FoodItemName);
-                Thread.Sleep(1000);
                 var isModal=restaurantPage.AddFoodItem();
-                Console.Write(isModal.Count());
+                
                 if(isModal.Any())
                 {
                     restaurantPage.ClickOnStartAFresh();
                 }
 
-                Thread.Sleep(2000);
                 var viewCartPage = restaurantPage.ViewCart();
-                try
-                {
-
-                    Assert.That(driver.FindElement(By.XPath("//div[@class='V7Usk']")).Text.Contains(excel.RestaurantName));
-                    Test = ExtentObject.CreateTest("CheckOut Page Loading");
-                    Test.Pass("CheckOut Page Loaded successfully");
-                }
-                catch (AssertionException ex)
-                {
-                    Test = ExtentObject.CreateTest("CheckOut Page Loading");
-                    Test.Fail("CheckOut Page failed");
-                }
-
+                WaitAndLogAssertion(()=> driver.FindElement(By.XPath("//div[@class='V7Usk']")).Text.Contains(excel.RestaurantName), "CheckOut Page Loading", "CheckOut Page Loaded successfully", "CheckOut Page failed");
+               
                 driver.Navigate().GoToUrl("https://www.swiggy.com/");
             }
             
+        }
+        void WaitAndLogAssertion(Func<bool> condition, string testName, string passMessage, string failMessage)
+        {
+            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+            ExtentTest test = ExtentObject.CreateTest(testName);
+
+            try
+            {
+                wait.Until(driver => condition());
+                test.Pass(passMessage);
+            }
+            catch (WebDriverTimeoutException)
+            {
+                test.Fail(failMessage);
+            }
         }
     }
 }

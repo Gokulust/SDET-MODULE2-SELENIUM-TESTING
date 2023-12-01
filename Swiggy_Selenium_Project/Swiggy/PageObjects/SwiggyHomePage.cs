@@ -169,10 +169,12 @@ namespace Swiggy.PageObjects
         }
         public void ClickOnFastDeliveryElement()
         {
+            CoreCodes.ScrollViewInto(driver, FastDeliveryElement);
             FastDeliveryElement.Click();
         }
         public bool FastDeliveryCheck()
         {
+            ClickOnFastDeliveryElement();
             var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
             var elementsAfterSort = wait.Until(ExpectedConditions.PresenceOfAllElementsLocatedBy(By.XPath("//div[@class='sc-dISpDn sc-iaJaUu hoJOJi fXbKft'][4]/div/div/div/a/div/div[2]/div[2]/div[2]/span")));
             var deliveryList = driver.FindElements(By.XPath("//div[@class='sc-dISpDn sc-iaJaUu hoJOJi fXbKft'][4]/div/div/div/a/div/div[2]/div[2]/div[2]"));

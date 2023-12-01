@@ -13,6 +13,16 @@ namespace Swiggy.PageObjects
     internal class ResutaurantPage
     {
         IWebDriver driver;
+
+        private DefaultWait<IWebDriver> CreateWait()
+        {
+            DefaultWait<IWebDriver> wait = new DefaultWait<IWebDriver>(driver);
+            wait.PollingInterval = TimeSpan.FromMilliseconds(100);
+            wait.Timeout = TimeSpan.FromSeconds(9);
+            wait.IgnoreExceptionTypes(typeof(NoSuchElementException));
+
+            return wait;
+        }
         public ResutaurantPage(IWebDriver driver)
         {
             this.driver = driver ?? throw new ArgumentException(nameof(driver));
@@ -41,25 +51,22 @@ namespace Swiggy.PageObjects
 
         public void ClickOnFoodSearchElement()
         {
+            CreateWait().Until(d=>FoodSearchIconElement.Displayed);
             FoodSearchIconElement.Click();
         }
         public void TypeFoodInFoodSearchBox(string foodName)
         {
+            CreateWait().Until(d => FoodSearchInputBox.Displayed);
             FoodSearchInputBox.SendKeys(foodName);
         }
 
         public List<IWebElement> AddFoodItem()
         {
             // CoreCodes.ScrollViewInto(driver, FoodItemAddButton);
-            DefaultWait<IWebDriver> fluentWait = new DefaultWait<IWebDriver>(driver);
-            fluentWait.Timeout = TimeSpan.FromSeconds(5);
-            fluentWait.PollingInterval = TimeSpan.FromMilliseconds(100);
-            fluentWait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(WebDriverTimeoutException));
-            fluentWait.Message = "Element Not Found";
-            Thread.Sleep(1000);
+            CreateWait().Until(d=>FoodItemAddButton.Displayed);
             FoodItemAddButton.Click();
-            Thread.Sleep(1000);
-            var modals = fluentWait.Until(d => d.FindElements(By.XPath("//button[text()='Yes, start afresh']")));
+          
+            var modals = CreateWait().Until(d => d.FindElements(By.XPath("//button[text()='Yes, start afresh']")));
             return modals.ToList();
            
             
@@ -69,22 +76,19 @@ namespace Swiggy.PageObjects
 
         public void ClickOnStartAFresh()
         {
-            DefaultWait<IWebDriver> fluentWait = new DefaultWait<IWebDriver>(driver);
-            fluentWait.Timeout = TimeSpan.FromSeconds(5);
-            fluentWait.PollingInterval = TimeSpan.FromMilliseconds(100);
-            fluentWait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(WebDriverTimeoutException));
-            fluentWait.Message = "Element Not Found";
-            var StartAFresh = fluentWait.Until(d => d.FindElement(By.XPath("//button[text()='Yes, start afresh']")));
+           
+            var StartAFresh = CreateWait().Until(d => d.FindElement(By.XPath("//button[text()='Yes, start afresh']")));
             StartAFresh.Click();
-            Thread.Sleep(2000);
+           
 
 
         }
 
         public ViewCartPage ViewCart()
         {
+            CreateWait().Until(d=>ViewCartButtonElement.Displayed);
             ViewCartButtonElement.Click();
-            Thread.Sleep(2000);
+          
             return new ViewCartPage(driver);
             
         }
