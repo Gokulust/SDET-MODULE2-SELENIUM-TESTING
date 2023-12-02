@@ -1,0 +1,4 @@
+2023-12-02 14:37:55.172 +05:30 [INF] Empty Cart Check test started
+2023-12-02 14:37:55.442 +05:30 [ERR] Empty Cart Check test failed
+2023-12-02 14:38:06.185 +05:30 [INF] Empty Cart Check test started
+2023-12-02 14:38:06.364 +05:30 [ERR] Empty Cart Check test failed

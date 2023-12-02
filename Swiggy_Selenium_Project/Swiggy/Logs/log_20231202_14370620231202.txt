@@ -1,0 +1,8 @@
+2023-12-02 14:37:06.796 +05:30 [INF] Sign In Page Loading test started
+2023-12-02 14:37:06.989 +05:30 [INF] Sign In Page Loading test passed
+2023-12-02 14:37:07.131 +05:30 [INF] Sign up page Loading test started
+2023-12-02 14:37:07.184 +05:30 [INF] Sign up page Loading test passed
+2023-12-02 14:37:12.697 +05:30 [INF] Sign In Page Loading test started
+2023-12-02 14:37:12.749 +05:30 [INF] Sign In Page Loading test passed
+2023-12-02 14:37:12.882 +05:30 [INF] Sign up page Loading test started
+2023-12-02 14:37:12.986 +05:30 [INF] Sign up page Loading test passed

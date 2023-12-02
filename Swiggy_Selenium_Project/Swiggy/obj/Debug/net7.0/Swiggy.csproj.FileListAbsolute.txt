@@ -291,3 +291,6 @@ C:\Users\249214\Desktop\Testing_Mini_Project\Swiggy_Selenium_Project\Swiggy\obj\
 C:\Users\249214\Desktop\Testing_Mini_Project\Swiggy_Selenium_Project\Swiggy\obj\Debug\net7.0\Swiggy.genruntimeconfig.cache
 C:\Users\249214\Desktop\Testing_Mini_Project\Swiggy_Selenium_Project\Swiggy\obj\Debug\net7.0\ref\Swiggy.dll
 C:\Users\249214\Desktop\Testing_Mini_Project\Swiggy_Selenium_Project\Swiggy\bin\Debug\net7.0\SeleniumExtras.WaitHelpers.dll
+C:\Users\249214\Desktop\Testing_Mini_Project\Swiggy_Selenium_Project\Swiggy\bin\Debug\net7.0\Serilog.dll
+C:\Users\249214\Desktop\Testing_Mini_Project\Swiggy_Selenium_Project\Swiggy\bin\Debug\net7.0\Serilog.Sinks.Console.dll
+C:\Users\249214\Desktop\Testing_Mini_Project\Swiggy_Selenium_Project\Swiggy\bin\Debug\net7.0\Serilog.Sinks.File.dll

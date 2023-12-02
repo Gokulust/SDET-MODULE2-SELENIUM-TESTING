@@ -51,23 +51,25 @@ namespace Swiggy.PageObjects
 
         public void ClickOnFoodSearchElement()
         {
-            CreateWait().Until(d=>FoodSearchIconElement.Displayed);
+            CreateWait().Until(d=>FoodSearchIconElement.Displayed && FoodSearchIconElement.Enabled);
             FoodSearchIconElement.Click();
         }
         public void TypeFoodInFoodSearchBox(string foodName)
         {
-            CreateWait().Until(d => FoodSearchInputBox.Displayed);
+            CreateWait().Until(d => FoodSearchInputBox.Displayed && FoodSearchInputBox.Enabled);
             FoodSearchInputBox.SendKeys(foodName);
         }
 
         public List<IWebElement> AddFoodItem()
         {
             // CoreCodes.ScrollViewInto(driver, FoodItemAddButton);
-            CreateWait().Until(d=>FoodItemAddButton.Displayed);
+            CreateWait().Until(d=>FoodItemAddButton.Displayed && FoodItemAddButton.Enabled);
             FoodItemAddButton.Click();
           
             var modals = CreateWait().Until(d => d.FindElements(By.XPath("//button[text()='Yes, start afresh']")));
+            Thread.Sleep(2000);
             return modals.ToList();
+            
            
             
         }
@@ -78,6 +80,7 @@ namespace Swiggy.PageObjects
         {
            
             var StartAFresh = CreateWait().Until(d => d.FindElement(By.XPath("//button[text()='Yes, start afresh']")));
+            CreateWait().Until(d => StartAFresh.Displayed); 
             StartAFresh.Click();
            
 
@@ -86,7 +89,9 @@ namespace Swiggy.PageObjects
 
         public ViewCartPage ViewCart()
         {
-            CreateWait().Until(d=>ViewCartButtonElement.Displayed);
+            Thread.Sleep(1000);
+            CreateWait().Until(d=>ViewCartButtonElement.Displayed && ViewCartButtonElement.Enabled);
+
             ViewCartButtonElement.Click();
           
             return new ViewCartPage(driver);

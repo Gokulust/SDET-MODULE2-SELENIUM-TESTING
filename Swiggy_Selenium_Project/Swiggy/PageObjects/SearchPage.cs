@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.PageObjects;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,15 @@ namespace Swiggy.PageObjects
             this.driver = driver ?? throw new ArgumentException(nameof(driver));
             PageFactory.InitElements(driver, this);
         }
+        private DefaultWait<IWebDriver> CreateWait()
+        {
+            DefaultWait<IWebDriver> wait = new DefaultWait<IWebDriver>(driver);
+            wait.PollingInterval = TimeSpan.FromMilliseconds(100);
+            wait.Timeout = TimeSpan.FromSeconds(9);
+            wait.IgnoreExceptionTypes(typeof(NoSuchElementException));
+
+            return wait;
+        }
 
         [FindsBy(How=How.XPath,Using = "//input[@class='_2FkHZ']")]
 
@@ -23,14 +33,16 @@ namespace Swiggy.PageObjects
 
         public void TypeSearchInput(string searchKeyword)
         {
+            CreateWait().Until(d => SearchInputBox.Displayed && SearchInputBox.Enabled);
             SearchInputBox.SendKeys(searchKeyword);
         }
 
         public SearchResultPage EnterSearchInput( string searchKeyword)
         {
             TypeSearchInput(searchKeyword);
+            CreateWait().Until(d => SearchInputBox.Displayed);
             SearchInputBox.SendKeys(Keys.Enter);
-            Thread.Sleep(2000);
+            
             return new SearchResultPage(driver);
         }
     }

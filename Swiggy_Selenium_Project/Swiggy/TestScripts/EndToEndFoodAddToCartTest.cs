@@ -1,6 +1,7 @@
 ﻿using AventStack.ExtentReports;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
+using Serilog;
 using Swiggy.PageObjects;
 using Swiggy.Utilities;
 using System;
@@ -19,12 +20,14 @@ namespace Swiggy.TestScripts
         [Test]
         public void FoodAddToCartTest()
         {
+            LogUpdates();
             string? currDir = Directory.GetParent(@"../../../")?.FullName;
             string? excelFilePath = currDir + "/TestData/SwiggyData.xlsx";
             string? sheetName = "SearchData";
             Func<DataRow,SearchData> myfunction = (row) => {return new SearchData() { RestaurantName = ExcelUtils.GetValueOrDefault(row, "Restaurant Name"), FoodItemName = ExcelUtils.GetValueOrDefault(row, "Food Item Name") }; };
             List<SearchData> excelSaerchData = ExcelUtils.ReadSearchData(excelFilePath, sheetName,myfunction) ;
             SwiggyHomePage swiggyHomePage = new(driver);
+
             swiggyHomePage.ChangeLocation("Thiruvananthapuram");
 
             foreach (var excel in excelSaerchData)
@@ -39,11 +42,13 @@ namespace Swiggy.TestScripts
                 restaurantPage.ClickOnFoodSearchElement();
                 restaurantPage.TypeFoodInFoodSearchBox(excel.FoodItemName);
                 var isModal=restaurantPage.AddFoodItem();
+               
                 
                 if(isModal.Any())
                 {
                     restaurantPage.ClickOnStartAFresh();
                 }
+                Thread.Sleep(2000);
 
                 var viewCartPage = restaurantPage.ViewCart();
                 WaitAndLogAssertion(()=> driver.FindElement(By.XPath("//div[@class='V7Usk']")).Text.Contains(excel.RestaurantName), "CheckOut Page Loading", "CheckOut Page Loaded successfully", "CheckOut Page failed");
@@ -59,12 +64,17 @@ namespace Swiggy.TestScripts
 
             try
             {
+                Log.Information(testName + " test " + "started");
                 wait.Until(driver => condition());
+                Assert.That(condition(), Is.True);
                 test.Pass(passMessage);
+                Log.Information(testName + " test " + "passed");
             }
             catch (WebDriverTimeoutException)
             {
+                TakeScreenShot();
                 test.Fail(failMessage);
+                Log.Error(testName + " test " + "failed");
             }
         }
     }

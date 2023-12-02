@@ -19,6 +19,15 @@ namespace Swiggy.PageObjects
             this.driver = driver ?? throw new ArgumentException(nameof(driver));
             PageFactory.InitElements(driver, this);
         }
+        private DefaultWait<IWebDriver> CreateWait()
+        {
+            DefaultWait<IWebDriver> wait = new DefaultWait<IWebDriver>(driver);
+            wait.PollingInterval = TimeSpan.FromMilliseconds(100);
+            wait.Timeout = TimeSpan.FromSeconds(20);
+            wait.IgnoreExceptionTypes(typeof(NoSuchElementException));
+
+            return wait;
+        }
 
         [FindsBy(How=How.XPath,Using = "//a[@href='/search']")]
         private IWebElement SearchIcon { get; set; }
@@ -66,6 +75,10 @@ namespace Swiggy.PageObjects
 
         private IWebElement RatingElement { get; set; }
 
+        [FindsBy(How = How.XPath, Using = "//label[text()='Delivery Time']")]
+
+        private IWebElement DeliveryTime { get; set; }
+
         [FindsBy(How=How.XPath,Using = "//button[div[text()='Apply']]")]
 
         private IWebElement SortByApply { get; set; }
@@ -85,8 +98,8 @@ namespace Swiggy.PageObjects
 
         public SearchPage CLickOnSearchIcon()
         {
+            CreateWait().Until(d => SearchIcon.Displayed);
             SearchIcon.Click();
-            Thread.Sleep(2000);
             return new SearchPage(driver);
         }
         public void ClickOnSignInIcon()
@@ -103,29 +116,32 @@ namespace Swiggy.PageObjects
             NameInput.SendKeys(userName);
             MobileNumberInput.SendKeys(mobileNumber);
             EmailInput.SendKeys(email);
-            CreateAccountButton.Click();
+            //CreateAccountButton.Click();
         }
 
        public void ChangeLocation(string location)
         {
+            CreateWait().Until(d => LocationSelectElement.Displayed && LocationSelectElement.Enabled);
             LocationSelectElement.Click();
             Thread.Sleep(2000);
+            CreateWait().Until(d => TypeLocationInputBox.Displayed && TypeLocationInputBox.Enabled);
             TypeLocationInputBox.SendKeys(location);
             Thread.Sleep(2000);
+            CreateWait().Until(d => SelectLocationElemnt.Displayed && SelectLocationElemnt.Enabled);
             SelectLocationElemnt.Click();
-            Thread.Sleep(3000);
+            Thread.Sleep(2000);
+
         }
         public void SortByRating()
         {
-            Thread.Sleep(2000);
+            CreateWait().Until(d => SortByElement.Displayed);
             CoreCodes.ScrollViewInto(driver,SortByElement);
-            Thread.Sleep(2000);
             SortByElement.Click();
-            Thread.Sleep(2000);
+            CreateWait().Until(d => RatingElement.Displayed);
             RatingElement.Click();
-            Thread.Sleep(2000);
+             CreateWait().Until(d=>SortByApply.Displayed);
             SortByApply.Click();
-            Thread.Sleep(2000);
+            
         }
   
         public List<double> GetRatingsAfterSorting()
@@ -155,6 +171,7 @@ namespace Swiggy.PageObjects
         public void SortByRatingMoreThanOrEqualTo4()
         {
             CoreCodes.ScrollViewInto(driver, SortByElement);
+            CreateWait().Until(d => Rating4PlusElement.Displayed);
             Rating4PlusElement.Click();
             
         }
@@ -167,14 +184,19 @@ namespace Swiggy.PageObjects
             var modifiedRatingList = RatingList.Select(x => Convert.ToDouble(x.Text.Replace(" ", "").Replace("•", ""))).ToList();
             return modifiedRatingList.All(r => r >= 4);
         }
-        public void ClickOnFastDeliveryElement()
+        public void ClickOnSortByDeliveryTime()
         {
-            CoreCodes.ScrollViewInto(driver, FastDeliveryElement);
-            FastDeliveryElement.Click();
+             CreateWait().Until(d => SortByElement.Displayed);
+            CoreCodes.ScrollViewInto(driver,SortByElement);
+            SortByElement.Click();
+            CreateWait().Until(d => DeliveryTime.Displayed);
+            DeliveryTime.Click();
+            CreateWait().Until(d => SortByApply.Displayed);
+            SortByApply.Click();
         }
-        public bool FastDeliveryCheck()
+        public bool SortByDeliveryTime()
         {
-            ClickOnFastDeliveryElement();
+            ClickOnSortByDeliveryTime();
             var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
             var elementsAfterSort = wait.Until(ExpectedConditions.PresenceOfAllElementsLocatedBy(By.XPath("//div[@class='sc-dISpDn sc-iaJaUu hoJOJi fXbKft'][4]/div/div/div/a/div/div[2]/div[2]/div[2]/span")));
             var deliveryList = driver.FindElements(By.XPath("//div[@class='sc-dISpDn sc-iaJaUu hoJOJi fXbKft'][4]/div/div/div/a/div/div[2]/div[2]/div[2]"));
@@ -182,7 +204,9 @@ namespace Swiggy.PageObjects
             List<int> extractedNumbers = new List<int>();
             foreach (var value in modifiedRatingList)
             {
+               
                 string[] parts = value.Split('•');
+                
                 int.TryParse(parts[1], out int number);
                     extractedNumbers.Add(number);
                 

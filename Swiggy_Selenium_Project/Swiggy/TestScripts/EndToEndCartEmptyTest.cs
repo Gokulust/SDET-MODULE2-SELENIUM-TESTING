@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using Serilog;
 using Swiggy.PageObjects;
 using Swiggy.Utilities;
 using System;
@@ -16,6 +17,7 @@ namespace Swiggy.TestScripts
         [Test]
         public void RemovingFoodFromCart()
         {
+            LogUpdates();
             string? currDir = Directory.GetParent(@"../../../")?.FullName;
             string? excelFilePath = currDir + "/TestData/SwiggyData.xlsx";
             string? sheetName = "SearchData";
@@ -41,20 +43,26 @@ namespace Swiggy.TestScripts
                 {
                     restaurantPage.ClickOnStartAFresh();
                 }
+                Thread.Sleep(2000);
                 var viewCartPage = restaurantPage.ViewCart();
 
+                Thread.Sleep(2000);
                 viewCartPage.ClickOnDecrementButton();
 
                 try
                 {
+                    Log.Information("Empty Cart Check test started");
                     Assert.That(driver.FindElement(By.XPath("//div[@class='_3Y9ZP'")).Text.Contains("Your cart is empty"));
                     Test = ExtentObject.CreateTest("Empty Cart Check");
                     Test.Pass("Empty Cart Check passed successfully");
+                    Log.Information("Empty Cart Check test passed");
                 }
                 catch
                 {
+                    TakeScreenShot();
                     Test = ExtentObject.CreateTest("Empty Cart Check");
-                    Test.Pass("Empty Cart Check failed ");
+                    Test.Fail("Empty Cart Check failed ");
+                    Log.Error("Empty Cart Check test failed");
                 }
 
             

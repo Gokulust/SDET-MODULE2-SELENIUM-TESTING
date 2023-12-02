@@ -2,13 +2,16 @@
 using AventStack.ExtentReports.Reporter;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.DevTools;
 using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Support.UI;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Log = Serilog.Log;
 
 namespace Swiggy.Utilities
 {
@@ -83,6 +86,24 @@ namespace Swiggy.Utilities
             IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
             js.ExecuteScript("arguments[0].scrollIntoView(true)", element);
         }
+        public static void LogUpdates()
+        {
+            string directory = Directory.GetParent(@"../../../").FullName;
+            string logfilepath = directory + "/Logs/log_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".txt";
+            Log.Logger = new LoggerConfiguration().
+                    WriteTo.Console().
+                    WriteTo.File(logfilepath, rollingInterval: RollingInterval.Day).
+                    CreateLogger();
+        }
+        public void TakeScreenShot()
+        {
+            ITakesScreenshot screenshot = (ITakesScreenshot)driver;
+            Screenshot ss = screenshot.GetScreenshot();
+            string currdir = Directory.GetParent(@"../../../").FullName;
+            string filepath = currdir + "/Screenshots/scs_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".png";
+            ss.SaveAsFile(filepath);
+
+        }
         [OneTimeTearDown]
 
         public void TearDown()
@@ -90,5 +111,8 @@ namespace Swiggy.Utilities
             driver.Quit();
             ExtentObject.Flush();
         }
+
+
+       
     }
 }
